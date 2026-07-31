@@ -76,22 +76,22 @@ if st.button("Predict"):
 
     import pandas as pd
 
-features_df = pd.DataFrame(features, columns=[
-    "Heart Rate",
-    "Respiratory Rate",
-    "Body Temperature",
-    "Oxygen Saturation",
-    "Systolic Blood Pressure",
-    "Diastolic Blood Pressure",
-    "Derived_MAP",
-    "Derived_HRV",
-    "Derived_Pulse_Pressure",
-    "Derived_BMI",
-    "Age",
-    "Gender_num"
-])
+    features_df = pd.DataFrame(features, columns=[
+        "Heart Rate",
+        "Respiratory Rate",
+        "Body Temperature",
+        "Oxygen Saturation",
+        "Systolic Blood Pressure",
+        "Diastolic Blood Pressure",
+        "Derived_MAP",
+        "Derived_HRV",
+        "Derived_Pulse_Pressure",
+        "Derived_BMI",
+        "Age",
+        "Gender_num"
+    ])
 
-scaled = scaler.transform(features_df)
+    scaled = scaler.transform(features_df)
 
     sequence = np.repeat(scaled, 5, axis=0)
     sequence = sequence.reshape(1, 5, 12)
