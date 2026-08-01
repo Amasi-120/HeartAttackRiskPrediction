@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
-import plotly.graph_objects as go
 from tensorflow.keras.models import load_model
 
 
@@ -14,6 +13,19 @@ st.set_page_config(
     page_title="Heart Attack Risk Prediction",
     page_icon="❤️",
     layout="wide"
+)
+
+st.markdown(
+"""
+<center>
+
+### 🩺 AI-Based Clinical Decision Support System
+
+This application predicts the probability of heart attack risk using an LSTM Deep Learning model trained on clinical vital signs.
+
+</center>
+""",
+unsafe_allow_html=True
 )
 
 
@@ -135,6 +147,9 @@ with st.sidebar:
     )
 
     st.title("❤️ Heart AI")
+    st.success("🟢 Model Loaded Successfully")
+    st.metric("Model Type", "LSTM")
+    st.metric("Clinical Features", "12")
 
     st.write(
         """
@@ -532,30 +547,27 @@ if st.button(
 
 
 
-    # Gauge Chart
+    st.markdown("### 📊 Risk Level")
 
-    fig = go.Figure(
-        go.Indicator(
+st.progress(float(value))
 
-            mode="gauge+number",
+col1, col2, col3 = st.columns(3)
 
-            value=value*100,
+with col1:
+    st.metric("Risk Score", f"{value:.2%}")
 
-            title={
-                "text":"Risk Level (%)"
-            },
+with col2:
+    st.metric("BMI", f"{bmi:.2f}")
 
-            gauge={
+with col3:
+    st.metric("MAP", f"{map_value:.1f}")
 
-                "axis":{
-                    "range":[0,100]
-                }
+st.markdown("---")
 
-            }
-
-        )
-    )
-
+if prediction >= 0.5:
+    st.warning("⚠️ The patient may be at high risk of heart attack. Immediate medical evaluation is recommended.")
+else:
+    st.success("✅ The patient's vital signs indicate a low predicted risk based on the model.")
 
     st.plotly_chart(
         fig,
