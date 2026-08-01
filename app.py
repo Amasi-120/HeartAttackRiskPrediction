@@ -565,8 +565,28 @@ with col3:
 st.markdown("---")
 
 if prediction >= 0.5:
-    st.warning("⚠️ The patient may be at high risk of heart attack. Immediate medical evaluation is recommended.")
-else:
-    st.success("✅ The patient's vital signs indicate a low predicted risk based on the model.")
+        st.markdown("### 📊 Risk Level")
 
-    )
+    st.progress(float(value))
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Risk Score", f"{value:.2%}")
+
+    with col2:
+        st.metric("BMI", f"{bmi:.2f}")
+
+    with col3:
+        st.metric("MAP", f"{map_value:.1f}")
+
+    st.markdown("---")
+
+    if prediction >= 0.5:
+        st.warning(
+            "⚠️ The patient may be at high risk of heart attack. Immediate medical evaluation is recommended."
+        )
+    else:
+        st.success(
+            "✅ The patient's vital signs indicate a low predicted risk based on the model."
+        )
