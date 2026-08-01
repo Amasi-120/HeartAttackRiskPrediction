@@ -2,87 +2,119 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import plotly.graph_objects as go
 from tensorflow.keras.models import load_model
 
 
-# ----------------------------
+# ==============================
 # Page Configuration
-# ----------------------------
+# ==============================
 
 st.set_page_config(
-    page_title="Heart Attack Risk AI",
+    page_title="Heart Attack Risk Prediction",
     page_icon="❤️",
     layout="wide"
 )
 
 
-# ----------------------------
-# Custom CSS
-# ----------------------------
+# ==============================
+# Custom Style
+# ==============================
 
 st.markdown("""
 <style>
 
-.main {
-    background-color: #f8fbff;
+body {
+    background-color:#f5f9ff;
 }
 
-h1 {
-    color: #0b3d91;
-    text-align: center;
-}
-
-.subtitle {
+.main-title {
     text-align:center;
-    color:#555;
-    font-size:18px;
+    font-size:45px;
+    font-weight:800;
+    color:#0B3D91;
+    margin-bottom:5px;
 }
+
+.sub-title {
+    text-align:center;
+    color:#64748b;
+    font-size:20px;
+    margin-bottom:30px;
+}
+
 
 .card {
-    background-color:white;
+    background:white;
     padding:25px;
-    border-radius:15px;
-    box-shadow:0px 4px 15px rgba(0,0,0,0.08);
+    border-radius:20px;
+    box-shadow:0px 8px 25px rgba(0,0,0,0.08);
     margin-bottom:20px;
 }
 
-.section-title {
-    color:#0b3d91;
+
+.card-title {
+    color:#0B3D91;
     font-size:22px;
     font-weight:bold;
 }
 
-.result-card {
-    padding:30px;
-    border-radius:20px;
+
+.result-high {
+    background:#ffe4e6;
+    padding:35px;
+    border-radius:25px;
     text-align:center;
-    font-size:25px;
+    color:#b91c1c;
+    font-size:30px;
     font-weight:bold;
 }
 
-.stButton button {
-    width:100%;
-    height:50px;
-    border-radius:12px;
-    background-color:#0b3d91;
-    color:white;
-    font-size:18px;
+
+.result-low {
+    background:#dcfce7;
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    color:#15803d;
+    font-size:30px;
+    font-weight:bold;
 }
 
+
+.stButton button {
+
+    width:100%;
+    height:55px;
+    border-radius:15px;
+    background:#0B3D91;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+
+}
+
+
 </style>
+
 """, unsafe_allow_html=True)
 
 
 
-# ----------------------------
-# Load Model
-# ----------------------------
+# ==============================
+# Load Resources
+# ==============================
 
 @st.cache_resource
 def load_resources():
 
-    model = load_model("heart_attack_model.keras")
-    scaler = joblib.load("scaler.pkl")
+    model = load_model(
+        "heart_attack_model.keras"
+    )
+
+    scaler = joblib.load(
+        "scaler.pkl"
+    )
 
     return model, scaler
 
@@ -91,99 +123,90 @@ model, scaler = load_resources()
 
 
 
-# ----------------------------
+# ==============================
+# Sidebar
+# ==============================
+
+with st.sidebar:
+
+    st.image(
+        "https://cdn-icons-png.flaticon.com/512/2966/2966327.png",
+        width=100
+    )
+
+    st.title("❤️ Heart AI")
+
+    st.write(
+        """
+        **Heart Attack Risk Prediction**
+
+        Deep Learning healthcare system
+        using LSTM Neural Network.
+
+        ---
+        
+        Model:
+        LSTM
+
+        Framework:
+        TensorFlow
+
+        Features:
+        12 Clinical Variables
+        """
+    )
+
+
+
+# ==============================
 # Header
-# ----------------------------
+# ==============================
 
 st.markdown(
 """
-<h1>❤️ Heart Attack Risk Prediction System</h1>
+<div class="main-title">
+❤️ Heart Attack Risk Prediction
+</div>
 
-<p class="subtitle">
-AI-powered cardiovascular risk assessment using Deep Learning (LSTM)
-</p>
-""",
-unsafe_allow_html=True
-)
-
-
-
-# Model Information Cards
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.info("🧠 Model\n\nLSTM Neural Network")
-
-with col2:
-    st.info("📊 Features\n\n12 Clinical Features")
-
-with col3:
-    st.info("⚡ Status\n\nOnline Prediction")
-
-
-
-st.divider()
-
-
-
-# ----------------------------
-# Patient Information
-# ----------------------------
-
-
-st.markdown(
-"""
-<div class="section-title">
-👤 Patient Information
+<div class="sub-title">
+AI-powered cardiovascular risk assessment system using Deep Learning
 </div>
 """,
 unsafe_allow_html=True
 )
 
 
-col1, col2 = st.columns(2)
+
+# ==============================
+# Info Cards
+# ==============================
 
 
-with col1:
-
-    age = st.number_input(
-        "Age",
-        1,
-        120,
-        40
-    )
-
-    gender = st.selectbox(
-        "Gender",
-        ["Female","Male"]
-    )
+c1,c2,c3 = st.columns(3)
 
 
-with col2:
-
-    weight = st.number_input(
-        "Weight (kg)",
-        30.0,
-        200.0,
-        70.0
-    )
-
-    height = st.number_input(
-        "Height (m)",
-        1.2,
-        2.2,
-        1.70
+with c1:
+    st.info(
+        "🧠\n\n"
+        "Deep Learning\n\n"
+        "LSTM Model"
     )
 
 
+with c2:
+    st.info(
+        "📊\n\n"
+        "Input Features\n\n"
+        "12 Clinical Features"
+    )
 
-bmi = weight/(height**2)
 
-
-st.success(
-    f"⚖️ Calculated BMI: {bmi:.2f}"
-)
+with c3:
+    st.info(
+        "⚡\n\n"
+        "Prediction\n\n"
+        "Real-time AI"
+    )
 
 
 
@@ -191,15 +214,15 @@ st.divider()
 
 
 
-# ----------------------------
-# Vital Signs
-# ----------------------------
+# ==============================
+# Patient Information
+# ==============================
 
 
 st.markdown(
 """
-<div class="section-title">
-❤️ Vital Signs
+<div class="card-title">
+👤 Patient Information
 </div>
 """,
 unsafe_allow_html=True
@@ -210,6 +233,73 @@ col1,col2,col3,col4 = st.columns(4)
 
 
 with col1:
+    age = st.number_input(
+        "Age",
+        1,
+        120,
+        40
+    )
+
+
+with col2:
+    gender = st.selectbox(
+        "Gender",
+        ["Female","Male"]
+    )
+
+
+with col3:
+    weight = st.number_input(
+        "Weight (kg)",
+        30.0,
+        200.0,
+        70.0
+    )
+
+
+with col4:
+    height = st.number_input(
+        "Height (m)",
+        1.2,
+        2.2,
+        1.70
+    )
+
+
+bmi = weight/(height**2)
+
+
+st.success(
+    f"⚖️ BMI: {bmi:.2f}"
+)
+
+
+
+st.divider()
+
+
+
+# ==============================
+# Vital Signs
+# ==============================
+
+
+st.markdown(
+"""
+<div class="card-title">
+❤️ Vital Signs
+</div>
+""",
+unsafe_allow_html=True
+)
+
+
+
+col1,col2,col3,col4 = st.columns(4)
+
+
+with col1:
+
     heart_rate = st.number_input(
         "Heart Rate",
         30.0,
@@ -217,7 +307,9 @@ with col1:
         75.0
     )
 
+
 with col2:
+
     resp_rate = st.number_input(
         "Respiratory Rate",
         5.0,
@@ -225,7 +317,9 @@ with col2:
         18.0
     )
 
+
 with col3:
+
     body_temp = st.number_input(
         "Temperature °C",
         34.0,
@@ -233,7 +327,9 @@ with col3:
         37.0
     )
 
+
 with col4:
+
     oxygen = st.number_input(
         "Oxygen Saturation %",
         50.0,
@@ -247,14 +343,14 @@ st.divider()
 
 
 
-# ----------------------------
+# ==============================
 # Blood Pressure
-# ----------------------------
+# ==============================
 
 
 st.markdown(
 """
-<div class="section-title">
+<div class="card-title">
 🩺 Blood Pressure
 </div>
 """,
@@ -286,46 +382,53 @@ with col2:
 
 
 
-# Derived Features
-
-derived_map = (sys_bp + 2*dia_bp)/3
-pulse_pressure = sys_bp-dia_bp
-hrv = 60
-
-gender_num = 1 if gender=="Male" else 0
-
-
-
-features = np.array([[
-    heart_rate,
-    resp_rate,
-    body_temp,
-    oxygen,
-    sys_bp,
-    dia_bp,
-    derived_map,
-    hrv,
-    pulse_pressure,
-    bmi,
-    age,
-    gender_num
-]])
-
-
-
-st.divider()
-
-
-
-# ----------------------------
+# ==============================
 # Prediction
-# ----------------------------
+# ==============================
 
 
-if st.button("🚀 Predict Heart Attack Risk"):
+if st.button(
+    "🚀 Analyze Heart Risk"
+):
+
+
+    gender_num = 1 if gender=="Male" else 0
+
+
+    map_value = (
+        sys_bp + 2*dia_bp
+    )/3
+
+
+    pulse_pressure = (
+        sys_bp-dia_bp
+    )
+
+
+    hrv = 60
+
+
+
+    data = np.array([[
+
+        heart_rate,
+        resp_rate,
+        body_temp,
+        oxygen,
+        sys_bp,
+        dia_bp,
+        map_value,
+        hrv,
+        pulse_pressure,
+        bmi,
+        age,
+        gender_num
+
+    ]])
 
 
     columns=[
+
         "Heart Rate",
         "Respiratory Rate",
         "Body Temperature",
@@ -338,11 +441,13 @@ if st.button("🚀 Predict Heart Attack Risk"):
         "Derived_BMI",
         "Age",
         "Gender_num"
+
     ]
 
 
+
     df = pd.DataFrame(
-        features,
+        data,
         columns=columns
     )
 
@@ -350,41 +455,44 @@ if st.button("🚀 Predict Heart Attack Risk"):
     scaled = scaler.transform(df)
 
 
-    sequence=np.repeat(
+
+    sequence = np.repeat(
         scaled,
         5,
         axis=0
     )
 
 
-    sequence=sequence.reshape(
+    sequence = sequence.reshape(
         1,
         5,
         12
     )
 
 
-    prediction=model.predict(
+    prediction = model.predict(
         sequence,
         verbose=0
     )[0][0]
 
 
 
-    st.subheader("Prediction Result")
+    st.divider()
 
+    st.subheader(
+        "Prediction Result"
+    )
 
 
     if prediction >=0.5:
 
         st.markdown(
         f"""
-        <div class="result-card"
-        style="background:#ffe6e6;color:#b30000">
+        <div class="result-high">
 
         ⚠️ HIGH RISK
 
-        <br>
+        <br><br>
 
         Confidence:
         {prediction:.2%}
@@ -395,18 +503,21 @@ if st.button("🚀 Predict Heart Attack Risk"):
         )
 
 
+        value=prediction
+
+
+
     else:
 
         confidence=1-prediction
 
         st.markdown(
         f"""
-        <div class="result-card"
-        style="background:#e6fff0;color:#008000">
+        <div class="result-low">
 
         ✅ LOW RISK
 
-        <br>
+        <br><br>
 
         Confidence:
         {confidence:.2%}
@@ -417,7 +528,36 @@ if st.button("🚀 Predict Heart Attack Risk"):
         )
 
 
+        value=confidence
 
-    st.progress(
-        float(prediction)
+
+
+    # Gauge Chart
+
+    fig = go.Figure(
+        go.Indicator(
+
+            mode="gauge+number",
+
+            value=value*100,
+
+            title={
+                "text":"Risk Level (%)"
+            },
+
+            gauge={
+
+                "axis":{
+                    "range":[0,100]
+                }
+
+            }
+
+        )
+    )
+
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
     )
