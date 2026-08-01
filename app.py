@@ -565,9 +565,7 @@ with col3:
 st.markdown("---")
 
 if prediction >= 0.5:
-        st.markdown("### 📊 Risk Level")
-
-        st.markdown("### 📊 Risk Level")
+           st.markdown("### 📊 Risk Level")
 
     st.progress(float(value))
 
