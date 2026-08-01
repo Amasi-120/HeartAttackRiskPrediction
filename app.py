@@ -569,7 +569,4 @@ if prediction >= 0.5:
 else:
     st.success("✅ The patient's vital signs indicate a low predicted risk based on the model.")
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
     )
